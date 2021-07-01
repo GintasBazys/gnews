@@ -1,88 +1,48 @@
-import React, {useEffect, useState} from "react";
-import axios from "axios";
-import {Card, ListGroupItem, ListGroup, Form, Button, Image} from "react-bootstrap";
+import React, {useState} from "react";
+import {Form, Button, Image} from "react-bootstrap";
 import searchIcon from "../assets/search.svg";
+import ArticlesComponent from "./ArticlesComponent";
+import axios from "axios";
 
 const HomepageComponent = () => {
 
-    const [articles, setArticles] = useState([]);
+    const [articlesShow, setArticlesShow] = useState(false);
     const [error, setError] = useState("");
     const [search, setSearch] = useState("");
 
-    const renderArticles = async () => {
-        await axios.get(`https://gnews.io/api/v4/search?q=example&token=${process.env.REACT_APP_GNEWS}&max=9`)
-            .then((res) => {
-                setArticles(res.data.articles)
-            })
-    }
-
-    useEffect(() => {
-        renderArticles().then(r => {
-
-        })
-    }, [])
 
     const handleSearchChange = (event) => {
         setSearch(event.target.value)
     }
 
-    const searchArticles = () => {
-        const validationRegex = /^[\w\-\s]+$/
-        console.log(search.length)
-        console.log(validationRegex.test(search))
+    const searchArticles = async () => {
+        const validationRegex = /^[\w-]+$/
         if(search.length >=40 || !validationRegex.test(search)) {
             setError("Error")
             setTimeout(() => {
                 setError("");
             }, 2000)
+
+            try {
+                const response = await axios.post("http://localhost:3001/search", {
+                    search: search
+                })
+            }catch (e) {
+
+            }
+
+        } else {
+            setArticlesShow(true);
+            try {
+                const response = await axios.post("http://localhost:3001/search", {
+                    search: search
+                })
+            }catch (e) {
+
+            }
         }
 
     }
-
-
-    let columns=[];
-    articles.forEach((article,idx) => {
-        columns.push(
-            <div className="col-sm" key={idx}>
-                <a href={article.source.url}>
-                    <Card style={{width: "18rem", margin: "0 auto"}}>
-                        <Card.Img variant="top" src={article.image} style={{maxWidth: "100%", height: "150px"}}/>
-                        <Card.Body>
-                            <Card.Title>
-                                <div style={{
-                                    display: "-webkit-box",
-                                    "-webkit-line-clamp": "2",
-                                    "-webkit-box-orient": "vertical",
-                                    overflow: "hidden",
-                                    textOverflow: "elipsis"
-                                }}>
-                                    {article.title}
-                                </div>
-                            </Card.Title>
-                            <Card.Text>
-                                <div style={{
-                                    display: "-webkit-box",
-                                    "-webkit-line-clamp": "2",
-                                    "-webkit-box-orient": "vertical",
-                                    overflow: "hidden",
-                                    textOverflow: "elipsis"
-                                }}>
-                                    {article.description}
-                                </div>
-
-                            </Card.Text>
-                        </Card.Body>
-                        <ListGroup className="list-group-flush">
-                            <ListGroupItem>{new Date(article.publishedAt).toDateString()}</ListGroupItem>
-                        </ListGroup>
-                    </Card>
-                </a>
-
-            </div>
-        )
-
-        if ((idx+1)%3===0) {columns.push(<div className="w-100" style={{padding: "2rem"}}></div>)}
-    })
 
     return (
         <div>
@@ -102,10 +62,10 @@ const HomepageComponent = () => {
 
                 </div>
             </div>
-            <div className="container">
-                <div className="row no-gutter px-0">
-                    {columns}
-                </div>
+            <div className="container" >
+                {
+                    articlesShow ? <ArticlesComponent search={search} articlesShow={setArticlesShow}/> : <div></div>
+                }
             </div>
 
         </div>
