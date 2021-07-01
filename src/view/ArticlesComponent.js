@@ -25,12 +25,12 @@ const ArticlesComponent = ({search, articles, searchArticles, error, handleSearc
                         <Card.Img variant="top" src={article.image} className="card-image"/>
                         <Card.Body>
                             <Card.Title>
-                                <div className="truncate-text">
+                                <div className="truncate-title">
                                     {article.title}
                                 </div>
                             </Card.Title>
                             <Card.Text>
-                                <div className="truncate-text">
+                                <div className="truncate-description">
                                     {article.description}
                                 </div>
 
@@ -52,11 +52,10 @@ const ArticlesComponent = ({search, articles, searchArticles, error, handleSearc
                 <div className="search-form">
 
                     <Form.Group>
-                        <Form.Label>Search articles</Form.Label>
                         {
-                            error.length === 0 ? <div></div> : <div className="error"><h5>{error}</h5></div>
+                            error.length === 0 ? <div></div> : <div className="error"><p>{error}</p></div>
                         }
-                        <Form.Control type="text" placeholder="..." value={search} onChange={handleSearchChange} />
+                        <Form.Control type="text" placeholder="Search articles" value={search} onChange={handleSearchChange} />
                         <div className="search-center">
                             <Button variant="outline-dark" className="search-button" onClick={searchArticles}><Image src={searchIcon} fluid /> Search</Button>
                         </div>

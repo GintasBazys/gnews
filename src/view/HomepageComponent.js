@@ -1,20 +1,25 @@
 import React, {useState} from "react";
 import ArticlesComponent from "./ArticlesComponent";
 import axios from "axios";
+import LoadingComponent from "./LoadingComponent";
 
 const HomepageComponent = () => {
 
     const [error, setError] = useState("");
     const [search, setSearch] = useState("");
     const [articles, setArticles] = useState([]);
+    const [loading, setLoading] = useState(false)
 
     const renderArticles = async () => {
+        setLoading(true);
         await axios.get(`https://gnews.io/api/v4/search?q=${search}&token=${process.env.REACT_APP_GNEWS}&max=9`)
             .then((res) => {
                 setArticles(res.data.articles)
+                setLoading(false);
             }).catch((error) => {
                 console.log(error.message)
                 alert("Search limit reached");
+                setLoading(false)
             })
     }
 
@@ -69,10 +74,11 @@ const HomepageComponent = () => {
 
     return (
         <div>
+            {
+                loading ? <div style={{marginTop: "2rem"}} className="center"><LoadingComponent /></div> : <div></div>
+            }
             <div className="container" >
-
                 <ArticlesComponent search={search} articles={articles} error={error} handleSearchChange={handleSearchChange} setSearch={setSearch} searchArticles={searchArticles} /> : <div></div>
-
             </div>
 
         </div>
