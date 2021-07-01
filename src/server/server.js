@@ -1,5 +1,4 @@
 const express = require("express");
-const axios = require("axios");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
@@ -23,7 +22,7 @@ app.post("/search", cors(), (req, res) => {
     console.log("User searched: " + search)
 })
 
-app.post("/articles", cors(), (req, res) => {
+app.post("/articles", cors(), (req) => {
     const {article} = req.body;
 
     console.log("Article title: " + article.title)
@@ -31,7 +30,7 @@ app.post("/articles", cors(), (req, res) => {
     console.log("Article content: " + article.content)
     console.log("Article url: " + article.url)
     console.log("Article image: " + article.image)
-    console.log("Article published at: " + article.publshedAt)
-    console.log("Article name: " + article.name)
-    console.log("Article website: " + article.website)
+    console.log("Article published at: " + new Date(article.publishedAt))
+    console.log("Article name: " + article.source.name)
+    console.log("Article website: " + article.source.url)
 })

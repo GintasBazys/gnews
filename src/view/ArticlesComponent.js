@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Card, ListGroup, ListGroupItem, Button} from "react-bootstrap";
 import axios from "axios";
 
-const ArticlesComponent = ({search, articlesShow}) => {
+const ArticlesComponent = ({search, articlesShow, setSearch}) => {
 
     const [articles, setArticles] = useState([]);
 
@@ -12,6 +12,7 @@ const ArticlesComponent = ({search, articlesShow}) => {
                 setArticles(res.data.articles)
             }).catch((error) => {
                 console.log(error.message)
+                alert("Search limit reached");
             })
     }
 
@@ -23,12 +24,13 @@ const ArticlesComponent = ({search, articlesShow}) => {
     let columns = [];
 
     const newSearch = () => {
+        setSearch("");
         articlesShow(false);
     }
 
     const logArticleInfo = async (article) => {
         try {
-            const response = await axios.post("http://localhost:3001/articles", {
+            await axios.post("http://localhost:3001/articles", {
                 article: article
             })
         }catch (e) {
@@ -38,30 +40,18 @@ const ArticlesComponent = ({search, articlesShow}) => {
 
     articles.forEach((article,idx) => {
         columns.push(
-            <div style={{width: "33%"}} className="col-3" key={idx}>
-                <a onClick={() =>logArticleInfo(article)} style={{textDecoration: "none", color: "black"}} href={article.url}>
-                    <Card className="mh-100" style={{margin: "0 auto"}}>
-                        <Card.Img variant="top" src={article.image} style={{maxWidth: "100%", height: "15rem"}}/>
+            <div className="col-sm" key={idx}>
+                <a onClick={() =>logArticleInfo(article)} className="link-style" href={article.url}>
+                    <Card className="card-style">
+                        <Card.Img variant="top" src={article.image} className="card-image"/>
                         <Card.Body>
                             <Card.Title>
-                                <div style={{
-                                    display: "-webkit-box",
-                                    "-webkit-line-clamp": "2",
-                                    "-webkit-box-orient": "vertical",
-                                    overflow: "hidden",
-                                    textOverflow: "elipsis"
-                                }}>
+                                <div className="truncate-text">
                                     {article.title}
                                 </div>
                             </Card.Title>
                             <Card.Text>
-                                <div style={{
-                                    display: "-webkit-box",
-                                    "-webkit-line-clamp": "2",
-                                    "-webkit-box-orient": "vertical",
-                                    overflow: "hidden",
-                                    textOverflow: "elipsis"
-                                }}>
+                                <div className="truncate-text">
                                     {article.description}
                                 </div>
 
@@ -75,12 +65,12 @@ const ArticlesComponent = ({search, articlesShow}) => {
             </div>
         )
 
-        if ((idx+1)%3===0) {columns.push(<div className="w-100" style={{padding: "2rem"}}></div>)}
+        if ((idx+1)%3===0) {columns.push(<div className="w-100 extra-column"></div>)}
     })
     return (
-        <div className="row no-gutters px-0">
-            <div style={{display: "flex", justifyContent: "center"}}>
-                <Button style={{marginTop: "1rem", marginBottom: "2rem", width: "50%"}} variant="outline-success" onClick={newSearch}>Start new search</Button>
+        <div className="row no-gutters px-0 center">
+            <div className="center">
+                <Button className="new-search" variant="outline-success" onClick={newSearch}>Start new search</Button>
             </div>
             {columns}
         </div>

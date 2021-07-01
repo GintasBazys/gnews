@@ -17,14 +17,29 @@ const HomepageComponent = () => {
 
     const searchArticles = async () => {
         const validationRegex = /^[\w-]+$/
-        if(search.length >=40 || !validationRegex.test(search)) {
-            setError("Error")
+        if(search.length >=40) {
+            setError("Please enter no more than 40 characters")
             setTimeout(() => {
                 setError("");
             }, 2000)
 
             try {
-                const response = await axios.post("http://localhost:3001/search", {
+                await axios.post("http://localhost:3001/search", {
+                    search: search
+                })
+            }catch (e) {
+
+            }
+
+        } else if(!validationRegex.test(search)) {
+
+            setError("Please enter alphanumerical characters only")
+            setTimeout(() => {
+                setError("");
+            }, 2000)
+
+            try {
+                await axios.post("http://localhost:3001/search", {
                     search: search
                 })
             }catch (e) {
@@ -34,7 +49,7 @@ const HomepageComponent = () => {
         } else {
             setArticlesShow(true);
             try {
-                const response = await axios.post("http://localhost:3001/search", {
+                await axios.post("http://localhost:3001/search", {
                     search: search
                 })
             }catch (e) {
@@ -46,16 +61,17 @@ const HomepageComponent = () => {
 
     return (
         <div>
-            <div style={{display: "flex", justifyContent: "center"}}>
-                <div style={{marginTop: "2rem", width: "50%"}}>
-                    {
-                        error.length === 0 ? <div></div> : <div><h1>{error}</h1></div>
-                    }
+            <div className="center">
+                <div className="search-form">
+
                     <Form.Group>
                         <Form.Label>Search articles</Form.Label>
+                        {
+                            error.length === 0 ? <div></div> : <div className="error"><h5>{error}</h5></div>
+                        }
                         <Form.Control type="text" placeholder="..." value={search} onChange={handleSearchChange} />
-                        <div style={{display: "flex", justifyContent: "center", marginTop: "2rem"}}>
-                            <Button variant="outline-dark" style={{marginRight: "2rem", marginBottom: "2rem"}} onClick={searchArticles}><Image src={searchIcon} fluid /> Search</Button>
+                        <div className="search-center">
+                            <Button variant="outline-dark" className="search-button" onClick={searchArticles}><Image src={searchIcon} fluid /> Search</Button>
                         </div>
 
                     </Form.Group>
@@ -64,7 +80,7 @@ const HomepageComponent = () => {
             </div>
             <div className="container" >
                 {
-                    articlesShow ? <ArticlesComponent search={search} articlesShow={setArticlesShow}/> : <div></div>
+                    articlesShow ? <ArticlesComponent search={search} setSearch={setSearch} articlesShow={setArticlesShow}/> : <div></div>
                 }
             </div>
 
