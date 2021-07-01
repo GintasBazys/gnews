@@ -1,22 +1,30 @@
 import React, {useState} from "react";
-import {Form, Button, Image} from "react-bootstrap";
-import searchIcon from "../assets/search.svg";
 import ArticlesComponent from "./ArticlesComponent";
 import axios from "axios";
 
 const HomepageComponent = () => {
 
-    const [articlesShow, setArticlesShow] = useState(false);
     const [error, setError] = useState("");
     const [search, setSearch] = useState("");
+    const [articles, setArticles] = useState([]);
 
+    const renderArticles = async () => {
+        await axios.get(`https://gnews.io/api/v4/search?q=${search}&token=${process.env.REACT_APP_GNEWS}&max=9`)
+            .then((res) => {
+                setArticles(res.data.articles)
+            }).catch((error) => {
+                console.log(error.message)
+                alert("Search limit reached");
+            })
+    }
 
     const handleSearchChange = (event) => {
         setSearch(event.target.value)
     }
 
     const searchArticles = async () => {
-        const validationRegex = /^[\w-]+$/
+        const validationRegex = /^[\w ]+$/
+
         if(search.length >=40) {
             setError("Please enter no more than 40 characters")
             setTimeout(() => {
@@ -47,7 +55,7 @@ const HomepageComponent = () => {
             }
 
         } else {
-            setArticlesShow(true);
+            renderArticles()
             try {
                 await axios.post("http://localhost:3001/search", {
                     search: search
@@ -61,27 +69,10 @@ const HomepageComponent = () => {
 
     return (
         <div>
-            <div className="center">
-                <div className="search-form">
-
-                    <Form.Group>
-                        <Form.Label>Search articles</Form.Label>
-                        {
-                            error.length === 0 ? <div></div> : <div className="error"><h5>{error}</h5></div>
-                        }
-                        <Form.Control type="text" placeholder="..." value={search} onChange={handleSearchChange} />
-                        <div className="search-center">
-                            <Button variant="outline-dark" className="search-button" onClick={searchArticles}><Image src={searchIcon} fluid /> Search</Button>
-                        </div>
-
-                    </Form.Group>
-
-                </div>
-            </div>
             <div className="container" >
-                {
-                    articlesShow ? <ArticlesComponent search={search} setSearch={setSearch} articlesShow={setArticlesShow}/> : <div></div>
-                }
+
+                <ArticlesComponent search={search} articles={articles} error={error} handleSearchChange={handleSearchChange} setSearch={setSearch} searchArticles={searchArticles} /> : <div></div>
+
             </div>
 
         </div>

@@ -1,32 +1,11 @@
-import React, {useEffect, useState} from "react";
-import {Card, ListGroup, ListGroupItem, Button} from "react-bootstrap";
+import React from "react";
+import {Card, ListGroup, ListGroupItem, Button, Form, Image} from "react-bootstrap";
 import axios from "axios";
+import searchIcon from "../assets/search.svg";
 
-const ArticlesComponent = ({search, articlesShow, setSearch}) => {
-
-    const [articles, setArticles] = useState([]);
-
-    const renderArticles = async () => {
-        await axios.get(`https://gnews.io/api/v4/search?q=${search}&token=${process.env.REACT_APP_GNEWS}&max=9`)
-            .then((res) => {
-                setArticles(res.data.articles)
-            }).catch((error) => {
-                console.log(error.message)
-                alert("Search limit reached");
-            })
-    }
-
-
-    useEffect(() => {
-        renderArticles()
-    }, [])
+const ArticlesComponent = ({search, articles, searchArticles, error, handleSearchChange}) => {
 
     let columns = [];
-
-    const newSearch = () => {
-        setSearch("");
-        articlesShow(false);
-    }
 
     const logArticleInfo = async (article) => {
         try {
@@ -68,12 +47,29 @@ const ArticlesComponent = ({search, articlesShow, setSearch}) => {
         if ((idx+1)%3===0) {columns.push(<div className="w-100 extra-column"></div>)}
     })
     return (
-        <div className="row no-gutters px-0 center">
+        <div>
             <div className="center">
-                <Button className="new-search" variant="outline-success" onClick={newSearch}>Start new search</Button>
+                <div className="search-form">
+
+                    <Form.Group>
+                        <Form.Label>Search articles</Form.Label>
+                        {
+                            error.length === 0 ? <div></div> : <div className="error"><h5>{error}</h5></div>
+                        }
+                        <Form.Control type="text" placeholder="..." value={search} onChange={handleSearchChange} />
+                        <div className="search-center">
+                            <Button variant="outline-dark" className="search-button" onClick={searchArticles}><Image src={searchIcon} fluid /> Search</Button>
+                        </div>
+
+                    </Form.Group>
+
+                </div>
             </div>
-            {columns}
+            <div className="row no-gutters px-0 center">
+                {columns}
+            </div>
         </div>
+
     )
 }
 
