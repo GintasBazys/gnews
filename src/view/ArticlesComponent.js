@@ -46,6 +46,13 @@ const ArticlesComponent = ({search, articles, searchArticles, error, handleSearc
 
         if ((idx+1)%3===0) {columns.push(<div className="w-100 extra-column"></div>)}
     })
+
+    const handleKeyDown = (event) => {
+        if(event.key === "Enter") {
+            searchArticles()
+        }
+    }
+
     return (
         <div>
             <div className="center">
@@ -55,7 +62,7 @@ const ArticlesComponent = ({search, articles, searchArticles, error, handleSearc
                         {
                             error.length === 0 ? <div></div> : <div className="error"><p>{error}</p></div>
                         }
-                        <Form.Control type="text" placeholder="Search articles" value={search} onChange={handleSearchChange} />
+                        <Form.Control type="text" placeholder="Search articles" value={search} onKeyDown={handleKeyDown} onChange={handleSearchChange} />
                         <div className="search-center">
                             <Button variant="outline-dark" className="search-button" onClick={searchArticles}><Image src={searchIcon} fluid /> Search</Button>
                         </div>
@@ -65,6 +72,9 @@ const ArticlesComponent = ({search, articles, searchArticles, error, handleSearc
                 </div>
             </div>
             <div className="row no-gutters px-0 center">
+                {
+                    articles.length === 0 ? <div className="center"><Image src="https://thumbs.gfycat.com/ValuableFamiliarDassie-size_restricted.gif" /></div> : <div></div>
+                }
                 {columns}
             </div>
         </div>
