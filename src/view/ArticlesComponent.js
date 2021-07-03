@@ -19,7 +19,7 @@ const ArticlesComponent = ({search, articles, searchArticles, error, handleSearc
 
     articles.forEach((article,idx) => {
         columns.push(
-            <div className="col-sm" key={idx}>
+            <div className="col-sm-3" key={idx}>
                 <a onClick={() =>logArticleInfo(article)} className="link-style" href={article.url}>
                     <Card className="card-style">
                         <Card.Img variant="top" src={article.image} className="card-image"/>

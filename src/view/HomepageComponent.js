@@ -78,7 +78,7 @@ const HomepageComponent = () => {
             {
                 loading ? <div style={{marginTop: "2rem"}} className="center"><LoadingComponent /></div> : <div></div>
             }
-            <div className="container" >
+            <div>
                 <ArticlesComponent search={search} articles={articles} error={error} handleSearchChange={handleSearchChange} setSearch={setSearch} searchArticles={searchArticles} />
             </div>
 
