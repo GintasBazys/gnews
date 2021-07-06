@@ -11,6 +11,7 @@
     "bootstrap": "^5.0.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mongodb": "^3.6.9",
     "node-sass": "4.14.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.1",
@@ -41,5 +42,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
   }
 }

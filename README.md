@@ -34,3 +34,7 @@ Server link:
 
 `localhost:3001`
 
+MongoDB environment variables:
+
+`REACT_APP_USERNAME=MongoDB_username; REACT_APP_PASSWORD=MongoDB_password`
+
